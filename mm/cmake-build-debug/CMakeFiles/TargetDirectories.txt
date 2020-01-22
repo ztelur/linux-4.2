@@ -1,0 +1,3 @@
+/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/CMakeFiles/mm.dir

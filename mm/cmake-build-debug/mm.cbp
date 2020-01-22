@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="mm"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/gbc/Work/linux-4.20/mm/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/gbc/Work/linux-4.20/mm/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/gbc/Work/linux-4.20/mm/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mm">
+				<Option output="/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/mm" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/gbc/Work/linux-4.20/mm/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/gbc/Work/linux-4.20/mm/."/>
+					<Add directory="/Users/gbc/Work/linux-4.20/mm/kasan"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 mm"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mm/fast">
+				<Option output="/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/mm" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/gbc/Work/linux-4.20/mm/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/gbc/Work/linux-4.20/mm/."/>
+					<Add directory="/Users/gbc/Work/linux-4.20/mm/kasan"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 mm/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/gbc/Work/linux-4.20/mm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/backing-dev.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/balloon_compaction.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/cleancache.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/cma.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/cma.h">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/cma_debug.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/compaction.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/debug.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/debug_page_ref.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/dmapool.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/early_ioremap.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/fadvise.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/failslab.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/filemap.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/frame_vector.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/frontswap.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/gup.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/gup_benchmark.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/highmem.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/hmm.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/huge_memory.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/hugetlb.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/hugetlb_cgroup.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/hwpoison-inject.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/init-mm.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/internal.h">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/interval_tree.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/kasan/kasan.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/kasan/kasan.h">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/kasan/kasan_init.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/kasan/quarantine.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/kasan/report.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/khugepaged.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/kmemleak-test.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/kmemleak.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/ksm.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/list_lru.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/maccess.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/madvise.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/memblock.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/memcontrol.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/memfd.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/memory-failure.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/memory.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/memory_hotplug.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/mempolicy.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/mempool.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/memtest.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/migrate.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/mincore.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/mlock.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/mm_init.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/mmap.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/mmu_context.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/mmu_gather.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/mmu_notifier.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/mmzone.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/mprotect.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/mremap.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/msync.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/nommu.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/oom_kill.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/page-writeback.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/page_alloc.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/page_counter.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/page_ext.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/page_idle.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/page_io.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/page_isolation.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/page_owner.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/page_poison.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/page_vma_mapped.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/pagewalk.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/percpu-internal.h">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/percpu-km.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/percpu-stats.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/percpu-vm.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/percpu.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/pgtable-generic.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/process_vm_access.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/quicklist.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/readahead.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/rmap.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/rodata_test.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/shmem.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/slab.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/slab.h">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/slab_common.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/slob.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/slub.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/sparse-vmemmap.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/sparse.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/swap.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/swap_cgroup.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/swap_slots.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/swap_state.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/swapfile.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/truncate.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/usercopy.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/userfaultfd.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/util.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/vmacache.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/vmalloc.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/vmpressure.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/vmscan.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/vmstat.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/workingset.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/z3fold.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/zbud.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/zpool.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/zsmalloc.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/zswap.c">
+			<Option target="mm"/>
+		</Unit>
+		<Unit filename="/Users/gbc/Work/linux-4.20/mm/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
