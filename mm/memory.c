@@ -3728,6 +3728,7 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
 		 * want to allocate huge page, and if we expose page table
 		 * for an instant, it will be difficult to retract from
 		 * concurrent faults and from rmap lookups.
+		 * 页中间目录不存在，即页表也为空
 		 */
 		vmf->pte = NULL;
 	} else {
@@ -3739,6 +3740,7 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
 		 * pmd from under us anymore at this point because we hold the
 		 * mmap_sem read mode and khugepaged takes it in write mode.
 		 * So now it's safe to run pte_offset_map().
+		 * 页中间目录存在，通过address尝试获取页表(Page Table)
 		 */
 		vmf->pte = pte_offset_map(vmf->pmd, vmf->address);
 		vmf->orig_pte = *vmf->pte;
@@ -3753,19 +3755,23 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
 		 */
 		barrier();
 		if (pte_none(vmf->orig_pte)) {
+			/* 假如页中间目录存在，但页表不存在, vmf->pte置为NULL */
 			pte_unmap(vmf->pte);
 			vmf->pte = NULL;
 		}
 	}
-
+	/* 假如vmf->pte为空，即尚未分配为缺失的页分配页表(Page Table) */
 	if (!vmf->pte) {
 		if (vma_is_anonymous(vmf->vma))
+			/* 处理匿名文件映射的缺页 */
 			return do_anonymous_page(vmf);
 		else
+			/* 处理文件映射的缺页  */
 			return do_fault(vmf);
 	}
-
+	/* 页表已经建立，但不存在于物理内存之中 */
 	if (!pte_present(vmf->orig_pte))
+		/* 从磁盘交换区换入物理内存 */
 		return do_swap_page(vmf);
 
 	if (pte_protnone(vmf->orig_pte) && vma_is_accessible(vmf->vma))
@@ -3776,8 +3782,10 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
 	entry = vmf->orig_pte;
 	if (unlikely(!pte_same(*vmf->pte, entry)))
 		goto unlock;
+	/* 页表已经建立，且也贮存在物理内存中，因为写操作触发了缺页中断，即为COW的缺页中断 */
 	if (vmf->flags & FAULT_FLAG_WRITE) {
 		if (!pte_write(entry))
+			/* 处理Copy On Write的Write部分的缺页中断 */
 			return do_wp_page(vmf);
 		entry = pte_mkdirty(entry);
 	}
@@ -3801,6 +3809,7 @@ unlock:
 }
 
 /*
+ * mm/memory.c
  * By the time we get here, we already hold the mm semaphore
  *
  * The mmap_sem may have been released depending on flags and our
@@ -3822,12 +3831,12 @@ static vm_fault_t __handle_mm_fault(struct vm_area_struct *vma,
 	p4d_t *p4d;
 	vm_fault_t ret;
 
-	pgd = pgd_offset(mm, address);
-	p4d = p4d_alloc(mm, pgd, address);
+	pgd = pgd_offset(mm, address); /* 返回指定的mm的全局目录项的指针 */
+	p4d = p4d_alloc(mm, pgd, address); /* 在X86的4级页面机制中，不做任何操作，直接返回pgd */
 	if (!p4d)
 		return VM_FAULT_OOM;
 
-	vmf.pud = pud_alloc(mm, p4d, address);
+	vmf.pud = pud_alloc(mm, p4d, address); /* 创建并分配一个Page Upper Directory指针 */
 	if (!vmf.pud)
 		return VM_FAULT_OOM;
 	if (pud_none(*vmf.pud) && transparent_hugepage_enabled(vma)) {
@@ -3885,7 +3894,7 @@ static vm_fault_t __handle_mm_fault(struct vm_area_struct *vma,
 			}
 		}
 	}
-
+	/* 根据vmf决定如何分配一个新的页面 */
 	return handle_pte_fault(&vmf);
 }
 

@@ -586,7 +586,7 @@ enum perf_event_task_context {
 struct wake_q_node {
 	struct wake_q_node *next;
 };
-
+/* 进程相关的代码 */
 struct task_struct {
 #ifdef CONFIG_THREAD_INFO_IN_TASK
 	/*
@@ -682,7 +682,7 @@ struct task_struct {
 	struct rb_node			pushable_dl_tasks;
 #endif
 
-	struct mm_struct		*mm;
+	struct mm_struct		*mm; /* 虚拟内存空间 */
 	struct mm_struct		*active_mm;
 
 	/* Per-thread vma caching: */

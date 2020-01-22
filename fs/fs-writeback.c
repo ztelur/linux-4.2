@@ -164,12 +164,14 @@ static void inode_io_list_del_locked(struct inode *inode,
 	list_del_init(&inode->i_io_list);
 	wb_io_lists_depopulated(wb);
 }
-
+/**
+ * 判断传入的wb任务是否已经register，如果是就执行，如果不是就等待
+ * */
 static void wb_wakeup(struct bdi_writeback *wb)
 {
 	spin_lock_bh(&wb->work_lock);
 	if (test_bit(WB_registered, &wb->state))
-		mod_delayed_work(bdi_wq, &wb->dwork, 0);
+		mod_delayed_work(bdi_wq, &wb->dwork, 0); // 这里delay是0，代表马上执行注册的wb函数wb_workfn
 	spin_unlock_bh(&wb->work_lock);
 }
 
@@ -940,6 +942,7 @@ static unsigned long get_nr_dirty_pages(void)
 
 static void wb_start_writeback(struct bdi_writeback *wb, enum wb_reason reason)
 {
+	/* 通过判断 wb-state 是否设置 WB_has_dirty_io 这个flag来判断是否同一个wb任务，之前的已经完成了，只有之前的已经完成，才能执行下一个*/
 	if (!wb_has_dirty_io(wb))
 		return;
 
@@ -950,6 +953,11 @@ static void wb_start_writeback(struct bdi_writeback *wb, enum wb_reason reason)
 	 * work items and keeping the flusher threads busy retrieving
 	 * that work. Ensure that we only allow one of them pending and
 	 * inflight at the time.
+	 * /*
+     * 先判断保证同一个wb任务，但是对于这一个wb，必须保证所有的dirty page都刷写回去之后，才会重新置0
+     * 与WB_writeback_running标志不同的地方是，可能需要多次执行wb的函数才可以全部dirty page都写回磁盘，
+     * 因此WB_writeback_running设置多次，所有的页写回后才会充值WB_start_all标志
+     **/
 	 */
 	if (test_bit(WB_start_all, &wb->state) ||
 	    test_and_set_bit(WB_start_all, &wb->state))
@@ -1889,23 +1897,28 @@ static long wb_check_start_all(struct bdi_writeback *wb)
 
 /*
  * Retrieve work items and do the writeback they describe
+ * 遍历 work_list 所有的 wb任务，然后执行 wb_writeback 处理主要wb任务
  */
 static long wb_do_writeback(struct bdi_writeback *wb)
 {
 	struct wb_writeback_work *work;
 	long wrote = 0;
 
-	set_bit(WB_writeback_running, &wb->state);
-	while ((work = get_next_work_item(wb)) != NULL) {
+	set_bit(WB_writeback_running, &wb->state); // 设置状态为正常运行
+	/**
+	 * 执行 force wb 的时候，执行这个while，将任务加入到list中，然后执行
+	 * 但是一般情况下，都是执行固定间隔wb和后台wb
+	 * */
+	while ((work = get_next_work_item(wb)) != NULL) { // // 遍历这个wb任务里面的所有wb_writeback_work，然后写回
 		trace_writeback_exec(wb, work);
-		wrote += wb_writeback(wb, work);
+		wrote += wb_writeback(wb, work); // 核心的wb函数
 		finish_writeback_work(wb, work);
 	}
 
 	/*
 	 * Check for a flush-everything request
 	 */
-	wrote += wb_check_start_all(wb);
+	wrote += wb_check_start_all(wb); // 检查是否全部的dirty的数据已经写入
 
 	/*
 	 * Check for periodic writeback, kupdated() style
@@ -1920,6 +1933,7 @@ static long wb_do_writeback(struct bdi_writeback *wb)
 /*
  * Handle writeback of dirty data for the device backed by this bdi. Also
  * reschedules periodically and does kupdated style flushing.
+ * 遍历 work_list 所有的 wb 任务，然后执行wb_do_writeback函数
  */
 void wb_workfn(struct work_struct *work)
 {
@@ -1941,7 +1955,7 @@ void wb_workfn(struct work_struct *work)
 		do {
 			pages_written = wb_do_writeback(wb);
 			trace_writeback_pages_written(pages_written);
-		} while (!list_empty(&wb->work_list));
+		} while (!list_empty(&wb->work_list)); // 遍历 work_list 所有的 wb任务，然后执行wb_do_writeback 函数
 	} else {
 		/*
 		 * bdi_wq can't get enough workers and we're running off
@@ -1950,13 +1964,13 @@ void wb_workfn(struct work_struct *work)
 		 */
 		pages_written = writeback_inodes_wb(wb, 1024,
 						    WB_REASON_FORKER_THREAD);
-		trace_writeback_pages_written(pages_written);
+		trace_writeback_pages_written(pages_written); // // 如果没有足够的worker去处理writeback，那么就同步处理。
 	}
 
 	if (!list_empty(&wb->work_list))
-		wb_wakeup(wb);
+		wb_wakeup(wb); // 如果没有全部处理完、再处理一次
 	else if (wb_has_dirty_io(wb) && dirty_writeback_interval)
-		wb_wakeup_delayed(wb);
+		wb_wakeup_delayed(wb); // 如果还有dirty的io，延迟一阵子再执行一次
 
 	current->flags &= ~PF_SWAPWRITE;
 }
@@ -1969,10 +1983,17 @@ static void __wakeup_flusher_threads_bdi(struct backing_dev_info *bdi,
 					 enum wb_reason reason)
 {
 	struct bdi_writeback *wb;
-
-	if (!bdi_has_dirty_io(bdi))
+	/**
+	 * 
+答: bdi_has_dirty_io 函数是根据bdi-&gt;tot_write_bandwidth的值去判断是否有dirty的wb的任务，而这个值则是在queue_io函数的时候改变，
+queue_io函数将需要被清理的inode移动到wb-&gt;b_io，同时增加bdi-&gt;tot_write_bandwidth的值，
+因此如果bdi-&gt;tot_write_bandwidth不为0，那么表示queue_io函数还需要继续处理，那么表示还有io没有处理完成，即dirty。
+	 **/
+	if (!bdi_has_dirty_io(bdi)) /* 先判断一下是否有dirty的writeback任务 */
 		return;
-
+	/**
+	 *  当一个bdi设备初始化的时候，就会将一个bdi_writeback加入到bdi->wb_list中。这个bdi_writeback的任务是调度writeback_work。
+	 * */
 	list_for_each_entry_rcu(wb, &bdi->wb_list, bdi_node)
 		wb_start_writeback(wb, reason);
 }
@@ -1987,6 +2008,7 @@ void wakeup_flusher_threads_bdi(struct backing_dev_info *bdi,
 
 /*
  * Wakeup the flusher threads to start writeback of all currently dirty pages
+ * 遍历当前的bdi_list所有的bdi设备，然后对这些设备进行一次flush操作，reason代表触发的原因，大多数情况下是 WB_REASON_SYNC
  */
 void wakeup_flusher_threads(enum wb_reason reason)
 {
@@ -2000,6 +2022,7 @@ void wakeup_flusher_threads(enum wb_reason reason)
 
 	rcu_read_lock();
 	list_for_each_entry_rcu(bdi, &bdi_list, bdi_list)
+		/* 遍历当前的 bdi_list 所有的bdi设备，然后对这些bdi设备执行一次flush操作 */
 		__wakeup_flusher_threads_bdi(bdi, reason);
 	rcu_read_unlock();
 }

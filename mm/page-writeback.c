@@ -1857,6 +1857,7 @@ DEFINE_PER_CPU(int, dirty_throttle_leaks) = 0;
  * calling it too often (ratelimiting).  But once we're over the dirty memory
  * limit we decrease the ratelimiting by a lot, to prevent individual processes
  * from overshooting the limit by (ratelimit_pages) each.
+ * 在 generic_perform_write 进行写操作的时候被触发，如果内存可用空间不够的时候回写 page cache 以释放内存
  */
 void balance_dirty_pages_ratelimited(struct address_space *mapping)
 {
@@ -1983,6 +1984,7 @@ int dirty_writeback_centisecs_handler(struct ctl_table *table, int write,
 	 */
 	if (!ret && write && dirty_writeback_interval &&
 		dirty_writeback_interval != old_interval)
+		/* 间隔性地被触发，用于定时写回数据 */
 		wakeup_flusher_threads(WB_REASON_PERIODIC);
 
 	return ret;

@@ -1233,12 +1233,12 @@ void do_user_addr_fault(struct pt_regs *regs,
 	unsigned long sw_error_code;
 	struct vm_area_struct *vma;
 	struct task_struct *tsk;
-	struct mm_struct *mm;
+	struct mm_struct *mm; 
 	vm_fault_t fault, major = 0;
 	unsigned int flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
 
 	tsk = current;
-	mm = tsk->mm;
+	mm = tsk->mm;  /* 获取该进程的内存描述符mm */
 
 	/* kprobes don't want to hook the spurious faults: */
 	if (unlikely(kprobes_fault(regs)))
@@ -1368,12 +1368,18 @@ retry:
 		 */
 		might_sleep();
 	}
-
+	/**
+	 * 首先尝试通过该进程的内存描述符mm获取vma即虚拟内存区域，
+	 * 假如不存在，则说明访问了非法的虚拟地址，返回bad_area()，
+	 * 同样假如是越界错误或者段权限错误也返回bad_area().
+	 * */
+	/* 通过address在内存描述符mm中查找vma */
 	vma = find_vma(mm, address);
-	if (unlikely(!vma)) {
-		bad_area(regs, sw_error_code, address);
+	if (unlikely(!vma)) { /* 假如不存在 */
+		bad_area(regs, sw_error_code, address); /* 访问非法地址 */
 		return;
 	}
+	/* 访问合法地址，跳转至good_area */
 	if (likely(vma->vm_start <= address))
 		goto good_area;
 	if (unlikely(!(vma->vm_flags & VM_GROWSDOWN))) {
@@ -1386,6 +1392,7 @@ retry:
 		 * The large cushion allows instructions like enter
 		 * and pusha to work. ("enter $65535, $31" pushes
 		 * 32 pointers and then decrements %sp by 65535.)
+		 * 访问了越界的栈空间
 		 */
 		if (unlikely(address + 65536 + 32 * sizeof(unsigned long) < regs->sp)) {
 			bad_area(regs, sw_error_code, address);
@@ -1400,6 +1407,7 @@ retry:
 	/*
 	 * Ok, we have a good vm_area for this memory access, so
 	 * we can handle it..
+	 * 如果是合法的内存请求，则可以处理一下
 	 */
 good_area:
 	if (unlikely(access_error(sw_error_code, vma))) {
@@ -1420,7 +1428,7 @@ good_area:
 	 * userland). The return to userland is identified whenever
 	 * FAULT_FLAG_USER|FAULT_FLAG_KILLABLE are both set in flags.
 	 */
-	fault = handle_mm_fault(vma, address, flags);
+	fault = handle_mm_fault(vma, address, flags); /* 处理缺页的具体实现 */
 	major |= fault & VM_FAULT_MAJOR;
 
 	/*
@@ -1483,9 +1491,12 @@ __do_page_fault(struct pt_regs *regs, unsigned long hw_error_code,
 		return;
 
 	/* Was the fault on kernel-controlled part of the address space? */
+	/* 检查address来判断地址属于内核态还是用户态 */
 	if (unlikely(fault_in_kernel_space(address)))
+		/* 处理内核态的缺页中断 */
 		do_kern_addr_fault(regs, hw_error_code, address);
 	else
+		/* 处理用户态的缺页中断 hw_error_code 页的错误码 */
 		do_user_addr_fault(regs, hw_error_code, address);
 }
 NOKPROBE_SYMBOL(__do_page_fault);
@@ -1506,17 +1517,20 @@ trace_page_fault_entries(unsigned long address, struct pt_regs *regs,
  * kind of tracing machinery before we've observed the CR2 value.
  *
  * exception_{enter,exit}() contains all sorts of tracepoints.
+ * 
+ * x86 体系中的缺页处理
  */
 dotraplinkage void notrace
 do_page_fault(struct pt_regs *regs, unsigned long error_code)
-{
+{	
+	/* CR2寄存器中包含有最新的页错误发生时的虚拟地址 */
 	unsigned long address = read_cr2(); /* Get the faulting address */
 	enum ctx_state prev_state;
 
 	prev_state = exception_enter();
 	if (trace_pagefault_enabled())
 		trace_page_fault_entries(address, regs, error_code);
-
+	/* 处理缺页中断 */
 	__do_page_fault(regs, error_code, address);
 	exception_exit(prev_state);
 }

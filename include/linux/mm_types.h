@@ -265,16 +265,18 @@ struct vm_userfaultfd_ctx {};
  * per VM-area/task.  A VM area is any part of the process virtual memory
  * space that has a special rule for the page-fault handlers (ie a shared
  * library, the executable area etc).
+ * 虚拟地址空间的一个区间, 一个进程的虚拟空间中可能有多个虚拟区间
+ * 可能有特殊的规则去进行缺页handlers
  */
 struct vm_area_struct {
 	/* The first cache line has the info for VMA tree walking. */
 
-	unsigned long vm_start;		/* Our start address within vm_mm. */
+	unsigned long vm_start;		/* Our start address within vm_mm. 在虚拟地址空间的起始位置 */
 	unsigned long vm_end;		/* The first byte after our end address
-					   within vm_mm. */
+					   within vm_mm. 在虚拟地址空间的结束位置 */
 
 	/* linked list of VM areas per task, sorted by address */
-	struct vm_area_struct *vm_next, *vm_prev;
+	struct vm_area_struct *vm_next, *vm_prev; /* 虚拟内存区域链表中的前继，后继指针 */
 
 	struct rb_node vm_rb;
 
@@ -288,7 +290,7 @@ struct vm_area_struct {
 
 	/* Second cache line starts here. */
 
-	struct mm_struct *vm_mm;	/* The address space we belong to. */
+	struct mm_struct *vm_mm;	/* The address space we belong to. vma所属的虚拟地址空间 */
 	pgprot_t vm_page_prot;		/* Access permissions of this VMA. */
 	unsigned long vm_flags;		/* Flags, see mm.h. */
 
@@ -312,12 +314,11 @@ struct vm_area_struct {
 	struct anon_vma *anon_vma;	/* Serialized by page_table_lock */
 
 	/* Function pointers to deal with this struct. */
-	const struct vm_operations_struct *vm_ops;
+	const struct vm_operations_struct *vm_ops; /* 虚拟内存操作集合 */
 
 	/* Information about our backing store: */
-	unsigned long vm_pgoff;		/* Offset (within vm_file) in PAGE_SIZE
-					   units */
-	struct file * vm_file;		/* File we map to (can be NULL). */
+	unsigned long vm_pgoff;		/* Offset (within vm_file) in PAGE_SIZE units 以Page为单位的偏移 */
+	struct file * vm_file;		/* File we map to (can be NULL).映射的文件，匿名映射即为nullptr */
 	void * vm_private_data;		/* was vm_pte (shared mem) */
 
 	atomic_long_t swap_readahead_info;
@@ -342,9 +343,11 @@ struct core_state {
 };
 
 struct kioctx_table;
+
+// 进程中虚拟地址空间的所有信息
 struct mm_struct {
 	struct {
-		struct vm_area_struct *mmap;		/* list of VMAs */
+		struct vm_area_struct *mmap;		/* list of VMAs vm_area_struct的链表 */
 		struct rb_root mm_rb;
 		u64 vmacache_seqnum;                   /* per-thread vmacache */
 #ifdef CONFIG_MMU
@@ -361,7 +364,7 @@ struct mm_struct {
 #endif
 		unsigned long task_size;	/* size of task vm space */
 		unsigned long highest_vm_end;	/* highest vma end address */
-		pgd_t * pgd;
+		pgd_t * pgd;    /* 指向进程的页目录 */
 
 		/**
 		 * @mm_users: The number of users including userspace.
@@ -380,8 +383,9 @@ struct mm_struct {
 		 *
 		 * Use mmgrab()/mmdrop() to modify. When this drops to 0, the
 		 * &struct mm_struct is freed.
+		 * vm_area_struct数量
 		 */
-		atomic_t mm_count;
+		atomic_t mm_count; /
 
 #ifdef CONFIG_MMU
 		atomic_long_t pgtables_bytes;	/* PTE page table pages */
@@ -403,7 +407,7 @@ struct mm_struct {
 		unsigned long hiwater_rss; /* High-watermark of RSS usage */
 		unsigned long hiwater_vm;  /* High-water virtual memory usage */
 
-		unsigned long total_vm;	   /* Total pages mapped */
+		unsigned long total_vm;	   /* Total pages mapped 映射的page数量 */
 		unsigned long locked_vm;   /* Pages that have PG_mlocked set */
 		unsigned long pinned_vm;   /* Refcount permanently increased */
 		unsigned long data_vm;	   /* VM_WRITE & ~VM_SHARED & ~VM_STACK */
@@ -412,9 +416,9 @@ struct mm_struct {
 		unsigned long def_flags;
 
 		spinlock_t arg_lock; /* protect the below fields */
-		unsigned long start_code, end_code, start_data, end_data;
-		unsigned long start_brk, brk, start_stack;
-		unsigned long arg_start, arg_end, env_start, env_end;
+		unsigned long start_code, end_code, start_data, end_data; // 代码段起始结束位置，数据段起始结束位置
+		unsigned long start_brk, brk, start_stack; // 堆的起始结束位置， 栈因为其性质，只有起始位置
+		unsigned long arg_start, arg_end, env_start, env_end; // 参数段，环境段的起始结束位置
 
 		unsigned long saved_auxv[AT_VECTOR_SIZE]; /* for /proc/PID/auxv */
 

@@ -352,11 +352,11 @@ static const struct vm_operations_struct ext4_dax_vm_ops = {
 #endif
 
 static const struct vm_operations_struct ext4_file_vm_ops = {
-	.fault		= ext4_filemap_fault,
-	.map_pages	= filemap_map_pages,
-	.page_mkwrite   = ext4_page_mkwrite,
+	.fault		= ext4_filemap_fault, // 处理Page Fault
+	.map_pages	= filemap_map_pages, //  映射文件至Page Cache
+	.page_mkwrite   = ext4_page_mkwrite, // 修改文件的状态为可写
 };
-
+/* eext4 自带的 mmap 功能 */
 static int ext4_file_mmap(struct file *file, struct vm_area_struct *vma)
 {
 	struct inode *inode = file->f_mapping->host;
@@ -370,8 +370,9 @@ static int ext4_file_mmap(struct file *file, struct vm_area_struct *vma)
 	 */
 	if (!IS_DAX(file_inode(file)) && (vma->vm_flags & VM_SYNC))
 		return -EOPNOTSUPP;
-
+	// 使用这个方法修改了一下更新了file的修改时间。
 	file_accessed(file);
+	/* 将对应的operation赋给vma->vm_flags */
 	if (IS_DAX(file_inode(file))) {
 		vma->vm_ops = &ext4_dax_vm_ops;
 		vma->vm_flags |= VM_HUGEPAGE;

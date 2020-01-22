@@ -105,17 +105,19 @@ struct bdi_writeback_congested {
  * change as blkcg is disabled and enabled higher up in the hierarchy, a wb
  * is tested for blkcg after lookup and removed from index on mismatch so
  * that a new wb for the combination can be created.
+ * 用于管理一个块设备所有的writeback任务，它是一个list，保存了将即将要做writeback的任务的对应结构。
+ * writeback机制会遍历这个list所有的work，然后将其执行，它的数据结构如下
  */
 struct bdi_writeback {
 	struct backing_dev_info *bdi;	/* our parent bdi */
 
 	unsigned long state;		/* Always use atomic bitops on this */
-	unsigned long last_old_flush;	/* last old data flush */
+	unsigned long last_old_flush;	/* last old data flush 上次刷写数据的时间，定期wb的时候用到 */
 
-	struct list_head b_dirty;	/* dirty inodes */
-	struct list_head b_io;		/* parked for writeback */
+	struct list_head b_dirty;	/* dirty inodes 暂存dirty inode，一般mark_dirty_inode会加入到这个list */
+	struct list_head b_io;		/* parked for writeback 用于暂存即将要被writeback处理的inode*/
 	struct list_head b_more_io;	/* parked for more writeback */
-	struct list_head b_dirty_time;	/* time stamps are dirty */
+	struct list_head b_dirty_time;	/* time stamps are dirty 暂存在cache过期的inode */
 	spinlock_t list_lock;		/* protects the b_* lists */
 
 	struct percpu_counter stat[NR_WB_STAT_ITEMS];
@@ -125,7 +127,7 @@ struct bdi_writeback {
 	unsigned long bw_time_stamp;	/* last time write bw is updated */
 	unsigned long dirtied_stamp;
 	unsigned long written_stamp;	/* pages written at bw_time_stamp */
-	unsigned long write_bandwidth;	/* the estimated write bandwidth */
+	unsigned long write_bandwidth;	/* the estimated write bandwidth 单次wb任务的带宽*/
 	unsigned long avg_write_bandwidth; /* further smoothed write bw, > 0 */
 
 	/*
@@ -139,10 +141,10 @@ struct bdi_writeback {
 
 	struct fprop_local_percpu completions;
 	int dirty_exceeded;
-	enum wb_reason start_all_reason;
+	enum wb_reason start_all_reason; /* 本次wb任务的触发 reason */
 
 	spinlock_t work_lock;		/* protects work_list & dwork scheduling */
-	struct list_head work_list;
+	struct list_head work_list; /* 保存 wb_writeback_work 结构的list，用于处理下次wb任务下面所有的work */
 	struct delayed_work dwork;	/* work item used for writeback */
 
 	unsigned long dirty_sleep;	/* last wait */
@@ -163,7 +165,13 @@ struct bdi_writeback {
 	};
 #endif
 };
-
+/**
+ * 在描述Writeback的具体执行机制时，首先需要介绍Bdi，Bdi的全称是Backing Device Info，
+ * 用来描述非易失存储设备的相关信息。Bdi是Writeback机制的基础，它的作用是初始化Writeback功能，
+ * 每一个Bdi代表一个设备，Writeback的时候也会根据Bdi的不同，将数据写入到不同的设备当中。
+ * 
+ * 
+ * */
 struct backing_dev_info {
 	struct list_head bdi_list;
 	unsigned long ra_pages;	/* max readahead in PAGE_SIZE units */
@@ -181,11 +189,12 @@ struct backing_dev_info {
 	/*
 	 * Sum of avg_write_bw of wbs with dirty inodes.  > 0 if there are
 	 * any dirty wbs, which is depended upon by bdi_has_dirty().
+	 * 表示 total wb 任务的 bandwidth 之和。带宽指单位时间写有多少次io
 	 */
 	atomic_long_t tot_write_bandwidth;
 
 	struct bdi_writeback wb;  /* the root writeback info for this bdi */
-	struct list_head wb_list; /* list of all wbs */
+	struct list_head wb_list; /* list of all wbs 保存着等待处理的wb任务 */
 #ifdef CONFIG_CGROUP_WRITEBACK
 	struct radix_tree_root cgwb_tree; /* radix tree of active cgroup wbs */
 	struct rb_root cgwb_congested_tree; /* their congested states */
